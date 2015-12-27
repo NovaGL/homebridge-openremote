@@ -1,21 +1,20 @@
 var Service, Characteristic, VolumeCharacteristic;
 var request = require("request");
 var inherits = require('util').inherits;
-var xpath = require('xpath'), dom = require('xmldom').DOMParser
+var xpath = require('xpath'), dom = require('xmldom').DOMParser;
 
 module.exports = function(homebridge){
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  // we can only do this after we receive the homebridge API object
   makeVolumeCharacteristic();
-  homebridge.registerAccessory("homebridge-openremote", "openremote", openremoteAccessory);
+  homebridge.registerAccessory("homebridge-openremote", "openremote", OpenRemoteStatusAccessory);
 }
 
 
-function openremoteAccessory(log, config) {
+function OpenRemoteStatusAccessory(log, config) {
   this.log = log;
 
-  // url info
+// url info
   this.on_url                 = config["on_url"];
   this.on_body                = config["on_body"];
   this.off_url                = config["off_url"];
@@ -36,10 +35,12 @@ function openremoteAccessory(log, config) {
   this.brightnessHandling     = config["brightnessHandling"] || "no";
   this.volumeHandling         = config["volumeHandling"]     || "no";
   this.switchHandling         = config["switchHandling"]     || "no";
+
 }
 
-openremoteAccessory.prototype = {
+OpenRemoteStatusAccessory.prototype = {
 
+  
   httpRequest: function(url, body, method, username, password, sendimmediately, callback) {
     request({
       url: url,

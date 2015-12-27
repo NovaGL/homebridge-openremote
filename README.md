@@ -5,10 +5,8 @@ Supports OpenRemote on the HomeBridge Platform and provides a status characteris
 # Installation
 
 1. Install homebridge using: npm install -g homebridge
-2. Install this plugin using: TBA
+2. Install this plugin using: npm install -g homebridge-openremote
 3. Update your configuration file. See sample-config.json for example
-
-Coming soon....
 
 # Configuration
 

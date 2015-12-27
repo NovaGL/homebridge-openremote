@@ -1,0 +1,40 @@
+{
+     "bridge": {
+        "name": "HomeBridge",
+        "username": "CC:22:3D:E3:CE:30",
+        "port": 51826,
+        "pin": "031-45-154"
+    },
+    
+    "description": "My HomeBridge OpenRemote sample",
+
+	"accessories": [ {
+            "accessory": "openremote",
+            "name": "Alfresco Speakers",
+				"switchHandling": "yes",
+				"http_method": "POST",
+				"on_url": "http://localhost:8080/controller/rest/control/1700/ON",
+				"off_url": "http://localhost:8080/controller/rest/control/1700/OFF",				
+				"status_url": "http://localhost:8080/controller/rest/status/100059",				
+			"service": "Volume",
+				"volumeHandling": "yes",				
+				"http_volume_method" : "GET",
+				"volume_url": "http://localhost:8080/controller/rest/control/1707/%b",		
+				"volumelvl_url":"http://localhost:8080/controller/rest/status/100054"	    
+       },
+{
+            "accessory": "openremote",
+            "name": "Kitchen Lamp",
+				"switchHandling": "yes",
+				"http_method": "POST",
+				"on_url": "http://localhost:8080/controller/rest/control/1673/ON",
+				"off_url": "http://localhost:8080/controller/rest/control/1673/OFF",
+				"status_url": "http://localhost:8080/controller/rest/status/100052",				
+			"service": "Light",						
+				"brightnessHandling": "yes",
+				"http_brightness_method": "GET",
+				"brightness_url": "http://localhost:8080/controller/rest/control/1680/%b",
+				"brightnesslvl_url":"http://localhost:8080/controller/rest/status/100047"		
+       }	   
+	   ]
+}

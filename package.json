@@ -1,29 +1,25 @@
 {
   "name": "homebridge-openremote",
-  "version": "0.0.4",
-  "description": "OpenRemote plugin for Homebridge",
-  "main": "index.js",
-  "dependencies": {
-    "request": "^2.67.0",
-    "xmldom": "^0.1.19",
-    "xpath": "^0.0.9"
-  },
-   "engines": {
+  "version": "0.0.3",
+  "description": "openremote plugin for homebridge: https://github.com/NovaGL/homebridge-openremote",
+  "license": "ISC",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
     "node": ">=0.12.0",
     "homebridge": ">=0.2.0"
   },
+  "author": {
+    "name": "NovaG"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NovaGL/homebridge-openremote.git"
+    "url": "git:///github.com/NovaGL/homebridge-openremote.git"
   },
-  "keywords": [
-    "homebridge",
-    "openremote"
-  ],
-  "author": "NovaG <gl1@live.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/NovaGL/homebridge-openremote/issues"
-  },
-  "homepage": "https://github.com/NovaGL/homebridge-openremote#readme"
+  "dependencies": {
+    "request": "^2.65.0",
+    "xmldom": "^0.1.19",
+    "xpath": "^0.0.9"
+  }
 }

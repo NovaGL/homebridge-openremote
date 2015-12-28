@@ -60,6 +60,12 @@ OpenRemoteStatusAccessory.prototype = {
   setPowerState: function(powerOn, callback) {
     var url;
     var body;
+    
+    if (!this.on_url || !this.off_url) {
+    	    this.log.warn("Ignoring request; No power url defined.");
+	    callback(new Error("No power url defined."));
+	    return;
+    }
 
     if (powerOn) {
       url = this.on_url;
@@ -77,15 +83,17 @@ OpenRemoteStatusAccessory.prototype = {
         callback(error);
       } else {
         this.log('HTTP set power function succeeded!');
-        // this.log(response);
-        // this.log(responseBody);
         callback();
       }
     }.bind(this));
   },
   
   getPowerState: function(callback) {
-    if (!this.status_url) { callback(null); }
+     if (!this.status_url) {
+    	    this.log.warn("Ignoring request; No status url defined.");
+	    callback(new Error("No status url defined."));
+	    return;
+       }   
     
     var url = this.status_url;
     this.log("Getting power state");
@@ -110,7 +118,11 @@ OpenRemoteStatusAccessory.prototype = {
   },
 
 getBrightness: function(callback) {
-		if (!this.brightnesslvl_url) { callback(null); }
+		if (!this.brightnesslvl_url) {
+    	    		this.log.warn("Ignoring request; No brightness level url defined.");
+	    		callback(new Error("No brightness level url defined."));
+	    		return;
+	 	}	
 		
 		var url = this.brightnesslvl_url;
 		this.log("Getting Brightness level");
@@ -130,6 +142,12 @@ getBrightness: function(callback) {
 	  },
 
   setBrightness: function(level, callback) {
+  	if (!this.brightness_url) {
+    	    this.log.warn("Ignoring request; No brightness url defined.");
+	    callback(new Error("No brightness url defined."));
+	    return;
+	 }
+	 
     var url = this.brightness_url.replace("%b", level)
 
     this.log("Setting brightness to %s", level);
@@ -145,7 +163,11 @@ getBrightness: function(callback) {
     }.bind(this));
   },
 getVolume: function(callback) {
-		if (!this.volumelvl_url) { callback(null); }
+		if (!this.volumelvl_url) {
+    	    		this.log.warn("Ignoring request; No volume level url defined.");
+	    		callback(new Error("No volume level url defined."));
+	    		return;
+	 	}  
 		
 		var url = this.volumelvl_url;
 		this.log("Getting volume level");
@@ -165,6 +187,12 @@ getVolume: function(callback) {
 	  },
 
   setVolume: function(level, callback) {
+  	if (!this.volumelvl_url) {
+    	    this.log.warn("Ignoring request; No volume url defined.");
+	    callback(new Error("No volume level url defined."));
+	    return;
+	 } 
+
     var url = this.volume_url.replace("%b", level)
 
     this.log("Setting volume to %s", level);

@@ -1,6 +1,6 @@
 {
   "name": "homebridge-openremote",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "openremote plugin for homebridge: https://github.com/NovaGL/homebridge-openremote",
   "license": "ISC",
   "keywords": [
@@ -20,6 +20,7 @@
   "dependencies": {
     "request": "^2.65.0",
     "xmldom": "^0.1.19",
-    "xpath": "^0.0.9"
+    "xpath": "^0.0.9",
+	"polling-to-event": ">=2.0.2"
   }
 }

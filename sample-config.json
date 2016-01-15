@@ -25,13 +25,13 @@
 {
             "accessory": "openremote",
             "name": "Kitchen Lamp",
-				"switchHandling": "yes",
+				"switchHandling": "realtime",
 				"http_method": "POST",
 				"on_url": "http://localhost:8080/controller/rest/control/1673/ON",
 				"off_url": "http://localhost:8080/controller/rest/control/1673/OFF",
 				"status_url": "http://localhost:8080/controller/rest/status/100052",				
 			"service": "Light",						
-				"brightnessHandling": "yes",
+				"brightnessHandling": "realtime",
 				"http_brightness_method": "GET",
 				"brightness_url": "http://localhost:8080/controller/rest/control/1680/%b",
 				"brightnesslvl_url":"http://localhost:8080/controller/rest/status/100047"		

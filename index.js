@@ -469,7 +469,7 @@ function OpenRemoteStatusAccessory(log, config) {
 			return [this.lockService];
 			break;
 		case "Smoke":
-			this.smokeService = new Service.MotionSensor(this.name);
+			this.smokeService = new Service.SmokeSensor(this.name);
 				
 			this.smokeService
 			.getCharacteristic(Characteristic.SmokeDetected)

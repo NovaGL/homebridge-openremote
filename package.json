@@ -21,6 +21,12 @@
     "request": "^2.65.0",
     "xmldom": "^0.1.19",
     "xpath": "^0.0.9",
-	"polling-to-event": ">=2.0.2"
-  }
+    "polling-to-event": ">=2.0.2",
+    "snyk": "^1.25.1"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }

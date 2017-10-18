@@ -13,13 +13,16 @@ module.exports = function(homebridge){
 
 
 function OpenRemoteStatusAccessory(log, config) {
-  this.log = log;
+	this.log = log;
 
-// url info
+	// url config info
 	this.on_url                 = config["on_url"];
 	this.on_body                = config["on_body"];
 	this.off_url                = config["off_url"];
 	this.off_body               = config["off_body"];
+	this.up_url                 = config["up_url"];
+	this.down_url               = config["down_url"];
+	this.stop_url               = config["stop_url"];
 	this.lock_url               = config["lock_url"]; 
 	this.lock_body              = config["lock_body"];
 	this.unlock_url             = config["unlock_url"]  			|| this.lock_url;
@@ -42,6 +45,10 @@ function OpenRemoteStatusAccessory(log, config) {
 	this.switchHandling         = config["switchHandling"]     		|| "no";
 	this.motionHandling	    	= config["motionHandling"] 		 	|| "no"; 
 	this.state = false;
+
+	// State variables
+	this.lastPosition = 0 //Blind closed by default
+	this.lastPositionState = 2 //Blind stopped by default
 	
 	this.currentlevel = 0;
     	var that = this;
@@ -103,9 +110,9 @@ function OpenRemoteStatusAccessory(log, config) {
 				}	
 				break;
 			}        
-    });
+    	});
+	}
 
-}
 	// Brightness Polling
 	if (this.brightnesslvl_url && this.brightnessHandling =="realtime") {
 		var brightnessurl = this.brightnesslvl_url;
@@ -134,8 +141,8 @@ function OpenRemoteStatusAccessory(log, config) {
     	});
 	}
 	}
-	OpenRemoteStatusAccessory.prototype = {
 
+	OpenRemoteStatusAccessory.prototype = {
   
 	httpRequest: function(url, body, method, username, password, sendimmediately, callback) {
 		request({
@@ -162,7 +169,7 @@ function OpenRemoteStatusAccessory(log, config) {
 			callback(new Error("No power url defined."));
 			return;
 		}
-	
+
 		if (powerOn) {
 			url = this.on_url;
 			body = this.on_body;
@@ -172,7 +179,7 @@ function OpenRemoteStatusAccessory(log, config) {
 			body = this.off_body;
 			this.log("Setting power state to off");
 		}
-	
+
 		this.httpRequest(url, body, this.http_method, this.username, this.password, this.sendimmediately, function(error, response, responseBody) {
 			if (error) {
 				this.log('HTTP set power function failed: %s', error.message);
@@ -182,8 +189,8 @@ function OpenRemoteStatusAccessory(log, config) {
 				callback();
 			}
 		}.bind(this));
-  },
-  
+	},
+
 	getPowerState: function(callback) {
 		if (!this.status_url) {
 			this.log.warn("Ignoring request; No status url defined.");
@@ -211,7 +218,53 @@ function OpenRemoteStatusAccessory(log, config) {
 			callback(null, powerOn);
 			}
 		}.bind(this));
-  },
+  	},
+
+	setTargetPosition: function(pos, callback) {
+		this.log("Set TargetPosition: %s", pos);
+		var url;
+		var body;
+		if (!this.up_url || !this.down_url) {
+			this.log.warn("Ignoring request; No up/down url defined.");
+			callback(new Error("No up/down url defined."));
+			return;
+		}
+
+		if (pos > 0) {
+			url = this.up_url;
+			this.log("Setting target position to up");
+		} else {
+			url = this.down_url;
+			this.log("Setting target position to down");
+		}
+
+		this.blindService.setCharacteristic(Characteristic.PositionState, (pos>0 ? 1 : 0));
+
+		this.httpRequest(url, body, this.http_method, this.username, this.password, this.sendimmediately, function(error, response, responseBody) {
+			if (error) {
+				this.log('HTTP set target position function failed: %s', error.message);
+				callback(error);
+			} else {
+				this.blindService.setCharacteristic(Characteristic.CurrentPosition, pos);
+				this.blindService.setCharacteristic(Characteristic.PositionState, 2);
+				this.log('HTTP set target position function succeeded!');
+				this.lastPosition = pos;
+				callback();
+			}
+		}.bind(this));
+	},
+
+	getTargetPosition: function(callback) {
+		callback(null, this.lastPosition);
+	},
+
+	getCurrentPosition: function(callback) {
+		callback(null, this.lastPosition);
+	},
+
+	getStatePosition: function(callback) {
+		callback(null, this.lastPositionState);
+	},
 
 	getBrightness: function(callback) {
 		if (!this.brightnesslvl_url) {
@@ -486,8 +539,30 @@ function OpenRemoteStatusAccessory(log, config) {
 	
 			return [this.motionService];
 			break;
+		case "Blind":
+			this.blindService = new Service.WindowCovering(this.name);
+
+			// the current position (0-100%)
+			this.blindService
+			.getCharacteristic(Characteristic.CurrentPosition)
+			.on('get', this.getCurrentPosition.bind(this));
+
+			// the target position (0-100%)
+			this.blindService
+			.getCharacteristic(Characteristic.TargetPosition)
+			.on('get', this.getTargetPosition.bind(this))
+			.on('set', this.setTargetPosition.bind(this));
+
+			// the position state
+			// 0 = DECREASING; 1 = INCREASING; 2 = STOPPED;
+			this.blindService
+			.getCharacteristic(Characteristic.PositionState)
+			.on('get', this.getStatePosition.bind(this));
+
+			return [informationService, this.blindService];
+			break;
 		}
-  }
+	}
 
 };
 

@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "request": "^2.65.0",
-    "xmldom": "^0.1.19",
+    "xmldom": "^0.5.0",
     "xpath": "^0.0.9",
 	"polling-to-event": ">=2.0.2"
   }
